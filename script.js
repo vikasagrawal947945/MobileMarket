@@ -67,10 +67,48 @@ async function display(url) {
         let showbtn = document.createElement("button");
         showbtn.innerText = "Show Details";
         showbtn.classList.add(...["btn", "bg-indigo-600", "hover:bg-indigo-900", "text-white", "mt-4",  "py-2"]);
-    
+        // Event Listener for "Show Details"
+        showbtn.addEventListener("click", () => fetchDetails(phone.slug));
         card.append(img, h3, p, showbtn);
         fragment.append(card);
     });
     
     phoneContainer.append(fragment);
+}
+// Function to fetch and show phone details
+async function fetchDetails(phoneId) {
+    let detailsUrl = `https://openapi.programming-hero.com/api/phone/${phoneId}`;
+    let response = await fetch(detailsUrl);
+    let data = await response.json();
+    let phoneDetails = data.data;
+
+    // Call function to show modal
+    showModal(phoneDetails);
+}
+function showModal(phone) {
+    let modal = document.createElement("div");
+    modal.classList.add("fixed", "top-0", "left-0", "w-full",  "bg-gray-900", "bg-opacity-75", "flex", "justify-center", "items-center", "z-50");
+
+    let modalContent = `
+        <div class="bg-gray-900 p-6 rounded-lg w-96 text-center">
+            <img src="${phone.image}" alt="${phone.name}" class="w-48 h-48 mx-auto">
+            <h2 class="text-2xl font-bold my-2">${phone.name}</h2>
+            <p class="text-gray-600">Brand: ${phone.brand}</p>
+            <p class="text-gray-600">Release Date: ${phone.releaseDate || "Not Available"}</p>
+            <p class="text-gray-600">Chipset: ${phone.mainFeatures?.chipSet || "Unknown"}</p>
+            <p class="text-gray-600">Display Size: ${phone.mainFeatures?.displaySize || "Unknown"}</p>
+            <p class="text-gray-600">Memory: ${phone.mainFeatures?.memory || "Unknown"}</p>
+            <p class="text-gray-600">Storage: ${phone.mainFeatures?.storage || "Unknown"}</p>
+            <p class="text-gray-600">Sensors: ${phone.mainFeatures?.sensors.join(", ") || "Unknown"}</p>
+            <button class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg close-modal">Close</button>
+        </div>
+    `;
+
+    modal.innerHTML = modalContent;
+    document.body.appendChild(modal);
+
+    // Close modal on button click
+    modal.querySelector(".close-modal").addEventListener("click", () => {
+        document.body.removeChild(modal);
+    });
 }
