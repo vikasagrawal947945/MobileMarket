@@ -1,0 +1,23 @@
+.phone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.p {
+    font-size: large;
+    text-align: center;
+}
+#fontdiv{
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 20px;
+}
+
+#font{
+     font-size: 1.5rem;
+}
+#hash{
+     font-size: 3rem;
+     font-weight: bolder;
+}
